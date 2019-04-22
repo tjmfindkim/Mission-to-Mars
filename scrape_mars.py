@@ -27,9 +27,9 @@ def scrape_mars_news():
         time.sleep(1)
 
         # Scrape page into Soup
-        html_mars = browser.html
+        html = browser.html
         # Parse HTML with Beautiful Soup
-        soup_mars = bs(html_mars, 'html.parser')
+        soup_mars = bs(html, 'html.parser')
 
 
         # Retrieve the latest element that contains news title and news_paragraph
@@ -77,9 +77,8 @@ def jpl_mars_space_images():
         featured_image_url 
 
         # Dictionary entry from FEATURED IMAGE
-        mars_info = {
-            "featured_image": featured_image_url
-                }
+        mars_info['featured_image'] = featured_image_url
+        
         return mars_info
     
     finally:
@@ -118,10 +117,8 @@ def scrape_mars_weather():
                 pass
 
         # Dictionary entry from WEATHER TWEET
-        mars_info = {
-            "mars_weather_tweet": mars_weather_tweet
-            }
-                
+        mars_info['mars_weather_tweet'] = mars_weather_tweet
+                        
         return mars_info
     
     finally:
@@ -141,19 +138,14 @@ def scrape_mars_facts():
     df.columns = ['Parameters','Values']
     
     # Set the index to the `Parameters`
-    df.set_index(["Parameters"])
-    
-    # Use Panda's `read_html` to parse the url
-    mars_facts = pd.read_html(mars_facts_url)
-
+    df.set_index('Parameters', inplace=True)
+   
     # Save html code to folder Assets
     fact = df.to_html()
 
     # Dictionary entry from MARS FACTS
-    mars_info = {
-        "fact": mars_facts
-    }
-    
+    mars_info['table'] = fact
+        
     return mars_info
 
 
@@ -214,4 +206,5 @@ def scrape_mars_hemispheres():
     
     finally:
 
+        # Close the browser after scraping
         browser.quit()

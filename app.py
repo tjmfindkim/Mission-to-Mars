@@ -7,10 +7,6 @@ import os
 # Create an instance of Flask app
 app = Flask(__name__)
 
-#Use flask_pymongo to set up connection through mLab
-app.config["MONGO_URI"] = os.environ.get('authentication')
-# mongo = PyMongo(app)
-
 # Use PyMongo to establish Mongo connection
 mongo = PyMongo(app, uri="mongodb://localhost:27017/mars_app")
 
@@ -19,18 +15,18 @@ mongo = PyMongo(app, uri="mongodb://localhost:27017/mars_app")
 def home(): 
 
     # Find one record of data from the mongo database
-    mars_info = mongo.db.mars_info.find_one()
+    mars_info = mongo.db.collection.find_one()
     # print(mars_info)
     
     # Return template and data
-    return render_template("index.html", mars_info=mars_info)
+    return render_template("index.html", mars_final_info=mars_info)
 
 # Route that will trigger scrape function
 @app.route("/scrape")
 def scrape(): 
 
     # Run scrapped functions
-    mars_data = mongo.db.mars_info
+    mars_data = mongo.db.mars_final_info
     mars_data = scrape_mars.scrape_mars_news()
     mars_data = scrape_mars.jpl_mars_space_images()
     mars_data = scrape_mars.scrape_mars_facts()
